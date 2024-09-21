@@ -1,4 +1,4 @@
-package br.com.rsdconsultoria.lab.helidon;
+package br.com.rsdconsultoria.lab.helidon.services;
 
 import java.util.Collections;
 import java.util.concurrent.atomic.AtomicReference;
@@ -28,17 +28,14 @@ import jakarta.json.JsonObject;
  * <p>
  * The message is returned as a JSON object
  */
-class GreetService implements HttpService {
-
-
-    private static final JsonBuilderFactory JSON = Json.createBuilderFactory(Collections.emptyMap());
+public class GreetService extends BaseServie implements HttpService {
 
     /**
      * The config value for the key {@code greeting}.
      */
     private final AtomicReference<String> greeting = new AtomicReference<>();
 
-    GreetService() {
+    public GreetService() {
         this(Config.global().get("app"));
     }
 
@@ -116,5 +113,4 @@ class GreetService implements HttpService {
                                        ServerResponse response) {
         updateGreetingFromJson(request.content().as(JsonObject.class), response);
     }
-
 }

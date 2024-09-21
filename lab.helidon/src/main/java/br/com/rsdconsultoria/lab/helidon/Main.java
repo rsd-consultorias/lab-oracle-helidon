@@ -1,20 +1,17 @@
-
 package br.com.rsdconsultoria.lab.helidon;
-
 
 import io.helidon.logging.common.LogConfig;
 import io.helidon.config.Config;
 import io.helidon.webserver.WebServer;
 import io.helidon.webserver.http.HttpRouting;
-
-
-
+import br.com.rsdconsultoria.lab.helidon.infrastructure.repository.ProductRepositoryImpl;
+import br.com.rsdconsultoria.lab.helidon.services.GreetService;
+import br.com.rsdconsultoria.lab.helidon.services.ProductService;
 
 /**
  * The application main class.
  */
 public class Main {
-
 
     /**
      * Cannot be instantiated.
@@ -22,13 +19,13 @@ public class Main {
     private Main() {
     }
 
-
     /**
      * Application main entry point.
+     * 
      * @param args command line arguments.
      */
     public static void main(String[] args) {
-        
+
         // load logging configuration
         LogConfig.configureRuntime();
 
@@ -36,25 +33,26 @@ public class Main {
         Config config = Config.create();
         Config.global(config);
 
-
         WebServer server = WebServer.builder()
                 .config(config.get("server"))
                 .routing(Main::routing)
                 .build()
                 .start();
 
-
         System.out.println("WEB server is up! http://localhost:" + server.port() + "/simple-greet");
 
     }
-
 
     /**
      * Updates HTTP Routing.
      */
     static void routing(HttpRouting.Builder routing) {
+        var productRepository = new ProductRepositoryImpl();
+
         routing
-               .register("/greet", new GreetService())
-               .get("/simple-greet", (req, res) -> res.send("Hello World!")); 
+                .register("/greet", new GreetService())
+                .get("/simple-greet", (req, res) -> res.send("Hello World!"))
+
+                .register("/products", new ProductService(productRepository));
     }
 }
