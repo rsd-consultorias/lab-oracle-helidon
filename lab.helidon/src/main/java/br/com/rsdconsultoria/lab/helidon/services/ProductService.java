@@ -33,7 +33,6 @@ public class ProductService extends BaseServie implements HttpService {
     private void listAllHandler(ServerRequest request,
             ServerResponse response) {
         var jsonArray = JSON.createArrayBuilder();
-        System.out.println("chamou...");
 
         for (Product product : this.productRepository.listAll()) {
             JsonObjectBuilder objectBuilder = JSON.createObjectBuilder()
