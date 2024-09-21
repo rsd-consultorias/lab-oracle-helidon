@@ -1,4 +1,4 @@
-# lab-helidon
+# lab.helidon
 
 Sample Helidon SE project that includes multiple REST operations.
 
@@ -8,7 +8,7 @@ Sample Helidon SE project that includes multiple REST operations.
 With JDK21
 ```bash
 mvn package
-java -jar target/lab-helidon.jar
+java -jar target/lab.helidon.jar
 ```
 
 ## Exercise the application
@@ -99,7 +99,7 @@ This uses the helidon-maven-plugin to perform the native compilation using your 
 Once it completes start the application using the native executable (no JVM!):
 
 ```
-./target/lab-helidon
+./target/lab.helidon
 ```
 
 Yep, it starts fast. You can exercise the application’s endpoints as before.
@@ -108,13 +108,13 @@ Yep, it starts fast. You can exercise the application’s endpoints as before.
 ## Building the Docker Image
 
 ```
-docker build -t lab-helidon .
+docker build -t lab.helidon .
 ```
 
 ## Running the Docker Image
 
 ```
-docker run --rm -p 8080:8080 lab-helidon:latest
+docker run --rm -p 8080:8080 lab.helidon:latest
 ```
 
 Exercise the application as described above.
@@ -136,8 +136,8 @@ kubectl get pods                            # Verify connectivity to cluster
 ```
 kubectl create -f app.yaml                              # Deploy application
 kubectl get pods                                        # Wait for quickstart pod to be RUNNING
-kubectl get service  lab-helidon                     # Get service info
-kubectl port-forward service/lab-helidon 8081:8080   # Forward service port to 8081
+kubectl get service  lab.helidon                     # Get service info
+kubectl port-forward service/lab.helidon 8081:8080   # Forward service port to 8081
 ```
 
 You can now exercise the application as you did before but use the port number 8081.
@@ -160,11 +160,11 @@ mvn package -Pjlink-image
 This uses the helidon-maven-plugin to perform the custom image generation.
 After the build completes it will report some statistics about the build including the reduction in image size.
 
-The target/lab-helidon-jri directory is a self contained custom image of your application. It contains your application,
+The target/lab.helidon-jri directory is a self contained custom image of your application. It contains your application,
 its runtime dependencies and the JDK modules it depends on. You can start your application using the provide start script:
 
 ```
-./target/lab-helidon-jri/bin/start
+./target/lab.helidon-jri/bin/start
 ```
 
 Class Data Sharing (CDS) Archive

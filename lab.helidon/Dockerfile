@@ -2,9 +2,8 @@
 # 1st stage, build the app
 FROM container-registry.oracle.com/java/jdk-no-fee-term:21 as build
 
-WORKDIR /usr/share
-
 # Install maven
+WORKDIR /usr/share
 RUN set -x && \
     curl -O https://archive.apache.org/dist/maven/maven-3/3.8.4/binaries/apache-maven-3.8.4-bin.tar.gz && \
     tar -xvf apache-maven-*-bin.tar.gz  && \
@@ -18,18 +17,23 @@ WORKDIR /helidon
 # Incremental docker builds will always resume after that, unless you update
 # the pom
 ADD pom.xml .
-RUN mvn package -Dmaven.test.skip -Declipselink.weave.skip
+RUN mvn package -Dmaven.test.skip -Declipselink.weave.skip 
 
-# Do the Maven build to create the custom Java Runtime Image
+# Do the Maven build!
 # Incremental docker builds will resume here when you change sources
 ADD src src
-RUN mvn package -Pjlink-image -DskipTests
+RUN mvn package -DskipTests
+
 RUN echo "done!"
 
-# 2nd stage, build the final image with the JRI built in the 1st stage
-
-FROM debian:stretch-slim
+# 2nd stage, build the runtime image
+FROM container-registry.oracle.com/java/jdk-no-fee-term:21
 WORKDIR /helidon
-COPY --from=build /helidon/target/lab-helidon-jri ./
-ENTRYPOINT ["/bin/bash", "/helidon/bin/start"]
+
+# Copy the binary built in the 1st stage
+COPY --from=build /helidon/target/lab.helidon.jar ./
+COPY --from=build /helidon/target/libs ./libs
+
+CMD ["java", "-jar", "lab.helidon.jar"]
+
 EXPOSE 8080
